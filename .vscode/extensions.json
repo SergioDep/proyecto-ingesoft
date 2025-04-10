@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "GitHub.copilot",
+    "VisualStudioExptTeam.vscodeintellicode",
+    "christian-kohler.path-intellisense",
+    "dsznajder.es7-react-js-snippets",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "yoavbls.pretty-ts-errors",
+    "bradlc.vscode-tailwindcss",
+    "tamasfe.even-better-toml"
+  ]
+}
