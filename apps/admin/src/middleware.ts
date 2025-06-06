@@ -11,15 +11,6 @@ type Session = typeof auth.$Infer.Session;
 
 // export default auth((request) => {
 export async function middleware(request: NextRequest) {
-  const { data: session } = (await fetch(
-    `${request.nextUrl.origin}/api/auth/get-session`,
-    {
-      headers: {
-        cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
-      },
-    },
-  ).then((res) => res.json())) as unknown as { data: Session };
-
   const { nextUrl } = request;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
@@ -31,7 +22,27 @@ export async function middleware(request: NextRequest) {
   if (isApiAuthRoute) {
     // response = NextResponse.next();
   } else {
-    const user = session.user;
+    let session: Session | null = null;
+    try {
+      const sessionData = await fetch(
+        `${request.nextUrl.origin}/api/auth/get-session`,
+        {
+          headers: {
+            cookie: request.headers.get("cookie") || "",
+          },
+        },
+      );
+
+      if (sessionData.ok) {
+        session = (await sessionData.json()) as Session | null;
+      } else {
+        console.warn("Failed to fetch session: ", sessionData.status);
+      }
+    } catch (error) {
+      console.error("Error fetching session:", error);
+    }
+
+    const user = session?.user;
 
     if (isAuthRoute) {
       if (user) {
