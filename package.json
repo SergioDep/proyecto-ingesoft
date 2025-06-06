@@ -30,14 +30,11 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "bun@1.1.12",
+  "packageManager": "bun@1.2.9",
   "workspaces": [
-    "apps/*",
+    "tooling/*",
     "packages/*",
-    "tooling/*"
+    "apps/*"
   ],
-  "prettier": "@repo/prettier-config",
-  "dependencies": {
-    "next": "^14"
-  }
+  "prettier": "@repo/prettier-config"
 }

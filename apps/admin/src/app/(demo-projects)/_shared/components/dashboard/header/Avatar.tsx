@@ -1,7 +1,8 @@
+import { headers } from "next/headers";
 import Image from "next/image";
-import { logoutAction } from "@/app/(auth)/_shared/server/actions/logout";
+import { auth } from "@/app/(auth)/_shared/server/auth";
+import { User } from "better-auth";
 import { LucideHelpCircle, LucideLogOut, LucideUserCircle } from "lucide-react";
-import { User } from "next-auth";
 
 import { Button } from "@repo/ui/components/button";
 import {
@@ -16,8 +17,8 @@ import {
 export default function DashboardHeaderUser({ user }: { user?: User }) {
   async function handleLogout() {
     "use server";
-    await logoutAction({
-      redirectTo: "/",
+    await auth.api.signOut({
+      headers: await headers(),
     });
   }
 

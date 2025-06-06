@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/app/(auth)/_shared/server/auth";
 import {
   apiAuthPrefix,
@@ -7,7 +7,10 @@ import {
   publicRoutes,
 } from "@/app/(base)/_shared/lib/config/routes";
 
-export default auth((request) => {
+type Session = typeof auth.$Infer.Session;
+
+// export default auth((request) => {
+export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
@@ -19,7 +22,27 @@ export default auth((request) => {
   if (isApiAuthRoute) {
     // response = NextResponse.next();
   } else {
-    const user = request.auth?.user;
+    let session: Session | null = null;
+    try {
+      const sessionData = await fetch(
+        `${request.nextUrl.origin}/api/auth/get-session`,
+        {
+          headers: {
+            cookie: request.headers.get("cookie") || "",
+          },
+        },
+      );
+
+      if (sessionData.ok) {
+        session = (await sessionData.json()) as Session | null;
+      } else {
+        console.warn("Failed to fetch session: ", sessionData.status);
+      }
+    } catch (error) {
+      console.error("Error fetching session:", error);
+    }
+
+    const user = session?.user;
 
     if (isAuthRoute) {
       if (user) {
@@ -39,7 +62,7 @@ export default auth((request) => {
   }
 
   return response;
-});
+}
 
 export const config = {
   matcher: [

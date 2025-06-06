@@ -1,37 +1,29 @@
 CREATE TABLE `account` (
+	`id` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
-	`type` text NOT NULL,
-	`provider` text NOT NULL,
 	`provider_account_id` text NOT NULL,
-	`refresh_token` text,
+	`provider` text NOT NULL,
 	`access_token` text,
-	`expires_at` integer,
-	`token_type` text,
+	`refresh_token` text,
+	`access_token_expires_at` integer,
+	`refresh_token_expires_at` integer,
 	`scope` text,
 	`id_token` text,
-	`session_state` text,
-	PRIMARY KEY(`provider`, `provider_account_id`),
+	`password` text,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE TABLE `authenticator` (
-	`credential_id` text NOT NULL,
-	`user_id` text NOT NULL,
-	`provider_account_id` text NOT NULL,
-	`credential_public_key` text NOT NULL,
-	`counter` integer NOT NULL,
-	`credential_device_type` text NOT NULL,
-	`credential_backed_up` integer NOT NULL,
-	`transports` text,
-	PRIMARY KEY(`user_id`, `credential_id`),
-	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
-);
---> statement-breakpoint
-CREATE UNIQUE INDEX `authenticator_credential_id_unique` ON `authenticator` (`credential_id`);--> statement-breakpoint
 CREATE TABLE `session` (
-	`session_token` text PRIMARY KEY NOT NULL,
+	`id` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
-	`expires` integer NOT NULL,
+	`token` text,
+	`expires_at` integer NOT NULL,
+	`ip_address` text,
+	`user_agent` text,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
@@ -43,7 +35,6 @@ CREATE TABLE `user` (
 	`image` text,
 	`middle_name` text,
 	`last_name` text,
-	`thumbnail_url` text,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
 	`modified_by` text,
@@ -54,9 +45,11 @@ CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement-breakp
 CREATE INDEX `users_name_index` ON `user` (`name`);--> statement-breakpoint
 CREATE INDEX `users_email_index` ON `user` (`email`);--> statement-breakpoint
 CREATE INDEX `users_created_at_index` ON `user` (`created_at`);--> statement-breakpoint
-CREATE TABLE `verification_token` (
+CREATE TABLE `verification` (
+	`id` text PRIMARY KEY NOT NULL,
 	`identifier` text NOT NULL,
-	`token` text NOT NULL,
-	`expires` integer NOT NULL,
-	PRIMARY KEY(`identifier`, `token`)
+	`value` text NOT NULL,
+	`expires_at` integer NOT NULL,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL
 );

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { signIn } from "@/app/(auth)/_shared/lib/auth_client";
 import { loginWithCredentialsAction } from "@/app/(auth)/_shared/server/actions/login-with-credentials";
-import { loginWithGoogleAction } from "@/app/(auth)/_shared/server/actions/login-with-google";
 import GoogleLogo from "@/app/(base)/_shared/components/icons/brands/Google";
 import { FloatingLabelInput } from "@/app/(base)/_shared/components/ui-extended/floating-label-input";
 import { FormRootMessage } from "@/app/(base)/_shared/components/ui-extended/form-root-message";
@@ -48,8 +48,11 @@ export default function LoginForm({
   }
 
   async function handleGoogleLogin() {
-    await loginWithGoogleAction({
-      redirectTo: DEFAULT_LOGGEDIN_REDIRECT,
+    // await loginWithGoogleAction({
+    //   redirectTo: DEFAULT_LOGGEDIN_REDIRECT,
+    // });
+    await signIn.social({
+      provider: "google",
     });
   }
 

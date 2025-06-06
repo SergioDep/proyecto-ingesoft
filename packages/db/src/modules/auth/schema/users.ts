@@ -19,32 +19,28 @@ export const usersTable = sqliteTable(
       .$defaultFn(() => crypto.randomUUID()),
     name: text("name"),
     email: text("email").unique(),
-    emailVerified: integer("email_verified", { mode: "timestamp_ms" }),
+    emailVerified: integer("email_verified", { mode: "boolean" }),
     image: text("image"),
     middleName: text("middle_name"),
     lastName: text("last_name"),
-    thumbnailUrl: text("thumbnail_url"),
     ...baseColumns,
     modifiedBy: text("modified_by"),
   },
   (table) => {
-    return {
-      nameIndex: index("users_name_index").on(table.name),
-      emailIndex: index("users_email_index").on(table.email),
-      createdAtIndex: index("users_created_at_index").on(table.createdAt),
-      modifiedByReference: foreignKey({
+    return [
+      index("users_name_index").on(table.name),
+      index("users_email_index").on(table.email),
+      index("users_created_at_index").on(table.createdAt),
+      foreignKey({
         columns: [table.modifiedBy],
         foreignColumns: [table.id],
       }),
-    };
+    ];
   },
 );
 
 export const insertUserSchema = createInsertSchema(usersTable);
 export const unsafeSelectUserSchema = createSelectSchema(usersTable);
-
-export type InsertUserModel = z.infer<typeof insertUserSchema>;
-export type UnsafeSelectUserModel = z.infer<typeof unsafeSelectUserSchema>;
 
 const schemas = {
   usersTable,
