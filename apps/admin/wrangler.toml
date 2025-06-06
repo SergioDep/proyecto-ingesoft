@@ -1,4 +1,4 @@
-name = "my-pages"
+name = "proyecto-ingesoft-admin"
 compatibility_date = "2024-12-04"
 compatibility_flags = [ "nodejs_compat_v2" ]
 pages_build_output_dir = ".vercel/output/static"
@@ -8,8 +8,8 @@ mode = "smart"
 
 [[d1_databases]]
 binding = "DATABASE"
-database_name = "my-db"
-database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+database_name = "proyecto-ingesoft"
+database_id = "051b9fb7-888d-45cd-8efe-ec05c1df0bc3"
 
 [[r2_buckets]]
 binding = "MY_BUCKET"
