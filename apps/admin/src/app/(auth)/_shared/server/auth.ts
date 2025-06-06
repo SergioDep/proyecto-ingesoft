@@ -1,28 +1,26 @@
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 import { db } from "@repo/db/client";
 import { accountsTable } from "@repo/db/modules/auth/schema/accounts";
-import { authenticatorsTable } from "@repo/db/modules/auth/schema/authenticators";
 import { sessionsTable } from "@repo/db/modules/auth/schema/sessions";
 import { usersTable } from "@repo/db/modules/auth/schema/users";
-import { verificationTokensTable } from "@repo/db/modules/auth/schema/verification-tokens";
+import { verificationTable } from "@repo/db/modules/auth/schema/verification";
 
-// TODO: Add Credentials, Discord, Github, and other providers
-export const {
-  handlers: { GET, POST },
-  signIn,
-  signOut,
-  auth,
-} = NextAuth({
-  trustHost: true,
-  adapter: DrizzleAdapter(db, {
-    accountsTable,
-    sessionsTable,
-    usersTable,
-    authenticatorsTable,
-    verificationTokensTable,
+export const auth = betterAuth({
+  socialProviders: {
+    google: {
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    },
+  },
+  database: drizzleAdapter(db, {
+    provider: "sqlite", // or "pg" or "mysql"
+    schema: {
+      account: accountsTable,
+      session: sessionsTable,
+      user: usersTable,
+      verification: verificationTable,
+    },
   }),
-  providers: [Google],
 });

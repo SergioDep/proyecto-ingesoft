@@ -11,10 +11,10 @@ binding = "DATABASE"
 database_name = "proyecto-ingesoft"
 database_id = "051b9fb7-888d-45cd-8efe-ec05c1df0bc3"
 
-[[r2_buckets]]
-binding = "MY_BUCKET"
-bucket_name = "my-bucket"
-
-[[kv_namespaces]]
-binding = "MY_KV"
-id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# [[r2_buckets]]
+# binding = "MY_BUCKET"
+# bucket_name = "my-bucket"
+# 
+# [[kv_namespaces]]
+# binding = "MY_KV"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"

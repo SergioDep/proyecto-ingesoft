@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/app/(auth)/_shared/server/auth";
 import {
   apiAuthPrefix,
@@ -7,7 +7,12 @@ import {
   publicRoutes,
 } from "@/app/(base)/_shared/lib/config/routes";
 
-export default auth((request) => {
+// export default auth((request) => {
+export async function middleware(request: NextRequest) {
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
+
   const { nextUrl } = request;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
@@ -19,7 +24,7 @@ export default auth((request) => {
   if (isApiAuthRoute) {
     // response = NextResponse.next();
   } else {
-    const user = request.auth?.user;
+    const user = session?.user;
 
     if (isAuthRoute) {
       if (user) {
@@ -39,7 +44,7 @@ export default auth((request) => {
   }
 
   return response;
-});
+}
 
 export const config = {
   matcher: [
