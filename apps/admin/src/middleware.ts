@@ -7,11 +7,18 @@ import {
   publicRoutes,
 } from "@/app/(base)/_shared/lib/config/routes";
 
+type Session = typeof auth.$Infer.Session;
+
 // export default auth((request) => {
 export async function middleware(request: NextRequest) {
-  const session = await auth.api.getSession({
-    headers: request.headers,
-  });
+  const { data: session } = (await fetch(
+    `${request.nextUrl.origin}/api/auth/get-session`,
+    {
+      headers: {
+        cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
+      },
+    },
+  ).then((res) => res.json())) as unknown as { data: Session };
 
   const { nextUrl } = request;
 
@@ -24,7 +31,7 @@ export async function middleware(request: NextRequest) {
   if (isApiAuthRoute) {
     // response = NextResponse.next();
   } else {
-    const user = session?.user;
+    const user = session.user;
 
     if (isAuthRoute) {
       if (user) {
